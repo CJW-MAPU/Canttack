@@ -6,4 +6,4 @@ if __name__ == '__main__':
     f = open('data/normal_run_data.txt')
 
     dataset_factory = DatasetFactory(f)
-    print(dataset_factory.fuzzing_builder().add_attack().build())
+    dataset_factory.print_normal_dataset_info()

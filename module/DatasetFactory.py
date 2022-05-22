@@ -4,16 +4,15 @@ __contact__ = 'c.j.biz.woong@gmail.com'
 __status__ = '2022-iitp-automobile'
 __version__ = '1.0.0'
 
-import multiprocessing
-import typing
+from module import utils, descriptions
 
-import numpy as np
+import typing
 import pandas
 import os
 
-from multiprocessing import Pool
-from tqdm import tqdm
-from joblib import Parallel, delayed
+NORMAL_FILE_NAME = '/normal_run_data.csv'
+DDOS_FILE_NAME = '/ddos_run_data.csv'
+FUZZING_FILE_NAME = '/fuzzing_run_data.csv'
 
 
 class DatasetFactory:
@@ -22,57 +21,43 @@ class DatasetFactory:
     The input_data parameter of the constructor method must have the following format:
     ::: Timestamp: 1479121434.850202        ID: 0100    000    DLC: 8    00 00 00 00 00 00 00 00 :::
 
-    :todo: Refactoring
+    :@todo: Refactoring
     """
 
-    attack_type = None
+    __directory = None
     __can_column = ['Timestamp', 'ID', 'DLC', 'Payload']
-    __normal_dataset: pandas.DataFrame = None
-    __fuzzing_dataset: pandas.DataFrame = None
-    __ddos_dataset: pandas.DataFrame = None
 
     @classmethod
-    def __init__(cls, input_data: typing.TextIO, attack_type = None):
+    def __init__(cls, input_data: typing.TextIO):
         """
         :param input_data: raw data ( CAN )
         """
-        cls.attack_type = attack_type
+        cls.__directory = os.path.realpath(os.path.curdir) + '/data'
         cls.__before_process(input_data)
 
     @classmethod
     def __before_process(cls, input_data: typing.TextIO) -> None:
         """
         :param input_data: raw data ( CAN )
-        :return: Normal Dataset
         """
-        current_directory = os.path.realpath(os.path.curdir)
-        target_directory = current_directory + '/data'
-        path = target_directory + '/normal_run_data.csv'
+        target = cls.__directory + NORMAL_FILE_NAME
 
-        if not os.path.exists(target_directory):
-            print('Directory Not Found.')
-            print('Creating Directory. ' + target_directory)
-            print()
-            os.makedirs(target_directory)
+        if not os.path.exists(cls.__directory):
+            descriptions.print_directory_is_not_exists(cls.__directory)
+            os.makedirs(cls.__directory)
 
-        if not os.path.exists(path):
-            print("you don't have normal dataset.")
-            print('Creating Dataset. ' + path)
-            print()
+        if not os.path.exists(target):
+            descriptions.print_normal_dataset_is_not_exists(target)
+            cls.__create_can_normal_dataset(input_data, target)
             # return cls.__txt_to_dataframe(input_data, path)
-            cls.__normal_dataset = cls.__create_can_normal_dataset(input_data, path)
         else:
-            print('you already have normal dataset.')
-            print('Dataset is ' + path)
-            print()
-            cls.__normal_dataset = pandas.read_csv(path)
+            descriptions.print_normal_dataset_is_exists(target)
 
     @classmethod
-    def __create_can_normal_dataset(cls, input_data: typing.TextIO, path: str) -> pandas.DataFrame:
+    def __create_can_normal_dataset(cls, input_data: typing.TextIO, target: str) -> None:
         """
         :param input_data: raw data ( CAN )
-        :param path: absolute path about dataset
-        :return: Normal Dataset
+        :param target: absolute path about dataset
         """
         dataframe = pandas.read_csv(input_data, sep = '   ', header = None)
         dataframe = dataframe.drop([1, 3], axis = 1)
@@ -82,52 +67,57 @@ class DatasetFactory:
         dataframe['DLC'] = dataframe['DLC'].str[6:]
         dataframe['Payload'] = dataframe['Payload'].str[1:]
 
-        dataframe.to_csv(path, sep = ',', index = False)
-
-        return dataframe
+        dataframe.to_csv(target, sep = ',', index = False)
 
     @classmethod
-    def fuzzing_builder(cls):
-        cls.attack_type = 'fuzzing'
-        return cls
-
-    @classmethod
-    def ddos_builder(cls):
-        cls.attack_type = 'ddos'
-        return cls
-
-    @classmethod
-    def add_attack(cls):
-        if cls.attack_type == 'fuzzing':
-            print('1' + cls.attack_type)
-        elif cls.attack_type == 'ddos':
-            print('2' + cls.attack_type)
-        return cls
-
-    @classmethod
-    def build(cls) -> None:
-        print('build')
-
-    @classmethod
-    def get_normal_dataset(cls) -> pandas.DataFrame:
+    def __get_normal_dataset(cls) -> pandas.DataFrame:
         """
         :return: Normal Dataset.
         """
-        return cls.__normal_dataset
+        target = cls.__directory + NORMAL_FILE_NAME
+
+        if not os.path.exists(target):
+            raise FileNotFoundError('Normal Dataset Not Found!')
+        else:
+            return pandas.read_csv(target)
 
     @classmethod
-    def get_ddos_dataset(cls) -> pandas.DataFrame:
-        """
-        :return: DDoS Dataset.
-        """
-        return cls.__ddos_dataset
+    def print_normal_dataset_info(cls):
+        dataset = cls.__get_normal_dataset().sort_values('Timestamp')
+
+        print(f'Minimum Timestamp Value : {dataset["Timestamp"].min()}')
+        print(f'Maximum Timestamp Value : {dataset["Timestamp"].max()}')
 
     @classmethod
-    def get_fuzzing_dataset(cls) -> pandas.DataFrame:
-        """
-        :return: Fuzzing Dataset.
-        """
-        return cls.__fuzzing_dataset
+    def fuzzing_builder(cls):
+        return cls.__Builder('fuzzing', cls.__get_normal_dataset())
+
+    @classmethod
+    def ddos_builder(cls):
+        return cls.__Builder('ddos', cls.__get_normal_dataset())
+
+    class __Builder:
+        __type: str = ''
+        __dataset: pandas.DataFrame = None
+
+        @classmethod
+        def __init__(cls, attack_type: str, dataset: pandas.DataFrame):
+            cls.__type = attack_type
+            cls.__dataset = dataset
+
+        @classmethod
+        def add_attack(cls) -> type:
+            if cls.__type == 'fuzzing':
+                cls.__dataset = utils.make_fuzzing()
+                return cls
+            elif cls.__type == 'ddos':
+                cls.__dataset = utils.make_ddos()
+                return cls
+
+        @classmethod
+        def build(cls) -> None:
+            # @todo: __dataset.to_csv() if __type == ddos/fuzzing then ddos.csv/fuzzing.csv
+            print('build')
 
     # @classmethod
     # def __txt_to_dataframe(cls, input_data: typing.TextIO, path: str) -> pandas.DataFrame:
