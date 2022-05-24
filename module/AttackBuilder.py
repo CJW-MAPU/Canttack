@@ -16,15 +16,12 @@ class AttackBuilder:
         cls.__attack_type = attack_type
 
     @classmethod
-    def add_attack(cls):
+    def inject_attack(cls):
         if cls.__attack_type == 'fuzzing':
-            # cls.__dataset = make_fuzzing(dataset = cls.__dataset)
-            print('fuzzing')
+            cls.__dataset = make_fuzzing(dataset = cls.__dataset)
         elif cls.__attack_type == 'ddos':
-            # cls.__dataset = make_ddos(dataset = cls.__dataset)
-            print('ddos')
+            cls.__dataset = make_ddos(dataset = cls.__dataset)
 
     @classmethod
     def build(cls) -> None:
-        # @todo: __dataset.to_csv() if __type == ddos/fuzzing then ddos.csv/fuzzing.csv
-        print('build')
+        cls.__dataset.to_csv(f'{cls.__attack_type}_run_data.csv', sep = ',', index = False)

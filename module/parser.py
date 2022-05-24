@@ -20,7 +20,7 @@ def inject_group_parser(inject_parser):
     attack_spec_group.add_argument('-T', '--target', required = True,
                                    help = 'The name of the dataset you want to inject the attack into.')
 
-    attack_spec_group.add_argument('-c', '--count', type = int,
+    attack_spec_group.add_argument('-c', '--count', type = int, default = 10,
                                    help = 'Number of attacks you want to inject into the dataset.')
 
     attack_type_group = inject_parser.add_argument_group('Attack Type')
@@ -30,3 +30,8 @@ def inject_group_parser(inject_parser):
                                      help = '')
     inject_mutual_group.add_argument('--fuzzing', action = 'store_true',
                                      help = '')
+
+
+def info_group_parser(info_parser):
+    info_parser.add_argument('-d', '--dataset', required = True,
+                             help = 'Dataset')

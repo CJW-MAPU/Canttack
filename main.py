@@ -1,10 +1,8 @@
-# import pandas as pd
 import os
 import argparse
 import textwrap
 
-from module.parser import dataset_group_parser, inject_group_parser
-from module.DatasetFactory import DatasetFactory
+from module.parser import dataset_group_parser, inject_group_parser, info_group_parser
 from module.AttackBuilder import AttackBuilder
 from module.utils import create_can_normal_dataset
 from argparse import RawDescriptionHelpFormatter
@@ -38,16 +36,21 @@ def inject(args):
         builder.set_attack_type('fuzzing')
 
     for i in range(0, count):
-        builder.add_attack()
+        builder.inject_attack()
 
     builder.build()
+
+
+def info(args):
+    print('asdfadsf')
+    print('qweqwe')
 
 
 def parser_setting():
     parser = argparse.ArgumentParser(description = textwrap.dedent('''\
         canttack is a tool for creating {can|can fd} normal dataset and injecting attack into dataset.\n
-        DDoS : The injected attack has a interval of 0.00001 and about 10,000 pieces of data are injected.
-        Fuzzing :The injected attack has a interval of 0.00001 and about 100 pieces of data are injected.
+        DDoS : The injected attack has a interval of 0.000001 and about 100 pieces of data are injected.
+        Fuzzing :The injected attack has a interval of 0.0000001 and about 10 pieces of data are injected.
         '''), prog = 'canttack', formatter_class = RawDescriptionHelpFormatter)
     parser.add_argument('-V', '--version', action = 'version', version = 'CANTTACK 1.0.0',
                         help = 'show this program version')
@@ -60,9 +63,13 @@ def parser_setting():
     inject_parser = subparsers.add_parser('inject',
                                           help = 'Inject an attack into the dataset')
     inject_parser.set_defaults(func = inject)
+    info_parser = subparsers.add_parser('info',
+                                        help = 'information')
+    info_parser.set_defaults(func = info)
 
     dataset_group_parser(dataset_parser)
     inject_group_parser(inject_parser)
+    info_group_parser(info_parser)
 
     args = parser.parse_args()
     if args.func is not None:
@@ -77,7 +84,3 @@ def main():
 
 if __name__ == '__main__':
     main()
-    # f = open('data/normal_run_data.txt')
-    #
-    # dataset_factory = DatasetFactory(f)
-    # dataset_factory.print_normal_dataset_info()
