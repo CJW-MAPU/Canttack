@@ -41,9 +41,9 @@ def inject(args):
     builder.build()
 
 
-def info(args):
-    print('asdfadsf')
-    print('qweqwe')
+# def info(args):
+#     print('asdfadsf')
+#     print('qweqwe')
 
 
 def parser_setting():
@@ -52,7 +52,7 @@ def parser_setting():
         DDoS : The injected attack has a interval of 0.000001 and about 100 pieces of data are injected.
         Fuzzing :The injected attack has a interval of 0.0000001 and about 10 pieces of data are injected.
         '''), prog = 'canttack', formatter_class = RawDescriptionHelpFormatter)
-    parser.add_argument('-V', '--version', action = 'version', version = 'CANTTACK 1.0.0',
+    parser.add_argument('-V', '--version', action = 'version', version = 'canttack 1.0.0',
                         help = 'show this program version')
     parser.set_defaults(func = None)
 
@@ -64,12 +64,12 @@ def parser_setting():
                                           help = 'Inject an attack into the dataset')
     inject_parser.set_defaults(func = inject)
     info_parser = subparsers.add_parser('info',
-                                        help = 'information')
-    info_parser.set_defaults(func = info)
+                                        help = 'View information about dataset')
+    # info_parser.set_defaults(func = info)
 
     dataset_group_parser(dataset_parser)
     inject_group_parser(inject_parser)
-    info_group_parser(info_parser)
+    # info_group_parser(info_parser)
 
     args = parser.parse_args()
     if args.func is not None:

@@ -1,4 +1,5 @@
 import pandas
+import os
 
 from module.utils import make_fuzzing, make_ddos
 
@@ -25,3 +26,6 @@ class AttackBuilder:
     @classmethod
     def build(cls) -> None:
         cls.__dataset.to_csv(f'{cls.__attack_type}_run_data.csv', sep = ',', index = False)
+        print()
+        print(f'File creating is success.')
+        print(f'File path is {os.getcwd()}/{cls.__attack_type}_run_data.csv')
