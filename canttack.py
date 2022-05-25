@@ -63,8 +63,8 @@ def parser_setting():
     inject_parser = subparsers.add_parser('inject',
                                           help = 'Inject an attack into the dataset')
     inject_parser.set_defaults(func = inject)
-    info_parser = subparsers.add_parser('info',
-                                        help = 'View information about dataset')
+    # info_parser = subparsers.add_parser('info',
+    #                                     help = 'View information about dataset')
     # info_parser.set_defaults(func = info)
 
     dataset_group_parser(dataset_parser)
