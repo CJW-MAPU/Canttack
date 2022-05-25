@@ -48,9 +48,9 @@ def inject(args):
 
 def parser_setting():
     parser = argparse.ArgumentParser(description = textwrap.dedent('''\
-        canttack is a tool for creating {can|can fd} normal dataset and injecting attack into dataset.\n
+        canttack is a tool for creating {CAN|CAN FD} normal dataset and injecting attack into dataset.\n
         DDoS : The injected attack has a interval of 0.000001 and about 100 pieces of data are injected.
-        Fuzzing :The injected attack has a interval of 0.0000001 and about 10 pieces of data are injected.
+        Fuzzing :The injected attack has a interval of 0.000001 and about 10 pieces of data are injected.
         '''), prog = 'canttack', formatter_class = RawDescriptionHelpFormatter)
     parser.add_argument('-V', '--version', action = 'version', version = 'canttack 1.0.0',
                         help = 'show this program version')
