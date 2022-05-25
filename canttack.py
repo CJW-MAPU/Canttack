@@ -80,6 +80,9 @@ def parser_setting():
 
 def main():
     parser_setting()
+    # @todo 1: Add CAN FD Option
+    # @todo 2: Code Refactoring
+    # @todo 3: Update description in help command
 
 
 if __name__ == '__main__':
