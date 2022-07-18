@@ -1,11 +1,11 @@
-import os
 import argparse
+import os
 import textwrap
-
-from module.parser import dataset_group_parser, inject_group_parser, info_group_parser
-from module.AttackBuilder import AttackBuilder
-from module.utils import create_can_normal_dataset
 from argparse import RawDescriptionHelpFormatter
+
+from module.AttackBuilder import AttackBuilder
+from module.parser import dataset_group_parser, inject_group_parser
+from module.utils import create_can_normal_dataset
 
 
 def dataset(args):
@@ -16,7 +16,7 @@ def dataset(args):
     try:
         f = open(f'{target}.txt')
     except FileNotFoundError:
-        exit(f'{target}.csv file is Not Found! please check file in current directory {os.getcwd()}')
+        exit(f'{target}.txt file is Not Found! please check file in current directory {os.getcwd()}')
 
     if is_can:
         create_can_normal_dataset(f, dest)
@@ -49,10 +49,10 @@ def inject(args):
 def parser_setting():
     parser = argparse.ArgumentParser(description = textwrap.dedent('''\
         canttack is a tool for creating {CAN|CAN FD} normal dataset and injecting attack into dataset.\n
-        DDoS : The injected attack has a interval of 0.000001 and about 100 pieces of data are injected.
-        Fuzzing :The injected attack has a interval of 0.000001 and about 10 pieces of data are injected.
+        DDoS : The injected attack has a interval of 0.00025 and about 4000 pieces of data are injected.
+        Fuzzing : The injected attack has an interval equal to the average of the timestamps of the entire packet, and is injected for about 1 second.
         '''), prog = 'canttack', formatter_class = RawDescriptionHelpFormatter)
-    parser.add_argument('-V', '--version', action = 'version', version = 'canttack 1.0.0',
+    parser.add_argument('-V', '--version', action = 'version', version = 'canttack 1.1.1',
                         help = 'show this program version')
     parser.set_defaults(func = None)
 
