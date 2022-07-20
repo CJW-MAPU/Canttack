@@ -24,8 +24,8 @@ def make_fuzzing(dataset: pandas.DataFrame) -> pandas.DataFrame:
         base_timestamp += 0.0001
         attack_data.loc[i, 'Timestamp'] = base_timestamp
         attack_data.loc[i, 'ID'] = can_id
-        attack_data.loc[i, 'DLC'] = dlc
-        attack_data.loc[i, 'Payload'] = payload
+        attack_data.loc[i, 'DLC'] = str(dlc)
+        attack_data.loc[i, 'Payload'] = ' '.join(payload)
         attack_data.loc[i, 'label'] = 1
 
     dataset = pandas.concat([dataset, attack_data])
