@@ -14,32 +14,60 @@ HEX = ['0', '1', '2', '3', '4', '5', '6', '7', '8', '9', 'A', 'B', 'C', 'D', 'E'
 def make_fuzzing(dataset: pandas.DataFrame) -> pandas.DataFrame:
     attack_data = pandas.DataFrame(columns = COLUMNS)
     base_timestamp = get_base_timestamp(dataset = dataset)
-    end_timestamp = base_timestamp + 1
 
-    i = 0
-    with tqdm() as pbar:
-        while base_timestamp < end_timestamp:
-            pbar.update(1)
-            id_data = HEX[randint(0, 15)] + HEX[randint(0, 15)] + HEX[randint(0, 15)]
-            dlc = randint(3, 8)
-            can_id = '00000000{0}'.format(id_data)
-            interval = round(get_interval(can_id = can_id, dataset = dataset), 5)
-            payload = [HEX[randint(0, 15)] + HEX[randint(0, 15)] for _ in range(0, dlc)]
+    for i in tqdm(range(0, 1000), leave = True):
+        id_data = HEX[randint(0, 15)] + HEX[randint(0, 15)] + HEX[randint(0, 15)]
+        dlc = randint(3, 8)
+        can_id = '00000{0}'.format(id_data)
+        payload = [HEX[randint(0, 15)] + HEX[randint(0, 15)] for _ in range(0, dlc)]
 
-            base_timestamp += interval
-            attack_data.loc[i, 'Timestamp'] = base_timestamp
-            attack_data.loc[i, 'ID'] = can_id
-            attack_data.loc[i, 'DLC'] = str(dlc)
-            attack_data.loc[i, 'Payload'] = ' '.join(payload)
-            attack_data.loc[i, 'label'] = 1
-
-            i += 1
+        base_timestamp += 0.0001
+        attack_data.loc[i, 'Timestamp'] = base_timestamp
+        attack_data.loc[i, 'ID'] = can_id
+        attack_data.loc[i, 'DLC'] = dlc
+        attack_data.loc[i, 'Payload'] = payload
+        attack_data.loc[i, 'label'] = 1
 
     dataset = pandas.concat([dataset, attack_data])
 
     dataset = dataset.sort_values(by = 'Timestamp')
 
     return dataset
+
+# def make_fuzzing(dataset: pandas.DataFrame) -> pandas.DataFrame:
+#     attack_data = pandas.DataFrame(columns = COLUMNS)
+#     base_timestamp = get_base_timestamp(dataset = dataset)
+#     end_timestamp = base_timestamp + 1
+#
+#     i = 0
+#     with tqdm() as pbar:
+#         while base_timestamp < end_timestamp:
+#             pbar.update(1)
+#             id_data = HEX[randint(0, 15)] + HEX[randint(0, 15)] + HEX[randint(0, 15)]
+#             dlc = randint(3, 8)
+#             can_id = '00000{0}'.format(id_data)
+#             interval = round(get_interval(can_id = can_id, dataset = dataset), 5)
+#             payload = [HEX[randint(0, 15)] + HEX[randint(0, 15)] for _ in range(0, dlc)]
+#
+#             base_timestamp += interval
+#             attack_data.loc[i, 'Timestamp'] = base_timestamp
+#             attack_data.loc[i, 'ID'] = can_id
+#             attack_data.loc[i, 'DLC'] = str(dlc)
+#             attack_data.loc[i, 'Payload'] = ' '.join(payload)
+#             attack_data.loc[i, 'label'] = 1
+#
+#             if base_timestamp is None:
+#                 print(base_timestamp)
+#                 print(interval)
+#                 exit(1)
+#
+#             i += 1
+#
+#     dataset = pandas.concat([dataset, attack_data])
+#
+#     dataset = dataset.sort_values(by = 'Timestamp')
+#
+#     return dataset
 
 
 def make_ddos(dataset: pandas.DataFrame) -> pandas.DataFrame:
