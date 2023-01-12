@@ -7,12 +7,13 @@ import random
 
 from tqdm import tqdm
 
-COLUMNS = ['Timestamp', 'ID', 'DLC', 'Payload']
+CAN_COLUMNS = ['Timestamp', 'ID', 'DLC', 'Payload']
+FD_COLUMNS = ['Timestamp', 'ID', 'DLC', 'Flg', 'Dir', 'Payload']
 HEX = ['0', '1', '2', '3', '4', '5', '6', '7', '8', '9', 'A', 'B', 'C', 'D', 'E', 'F']
 
 
 def make_fuzzing(dataset: pandas.DataFrame) -> pandas.DataFrame:
-    attack_data = pandas.DataFrame(columns = COLUMNS)
+    attack_data = pandas.DataFrame(columns = CAN_COLUMNS)
     base_timestamp = get_base_timestamp(dataset = dataset)
 
     for i in tqdm(range(0, 1000), leave = True):
@@ -71,7 +72,7 @@ def make_fuzzing(dataset: pandas.DataFrame) -> pandas.DataFrame:
 
 
 def make_dos(dataset: pandas.DataFrame) -> pandas.DataFrame:
-    attack_data = pandas.DataFrame(columns = COLUMNS)
+    attack_data = pandas.DataFrame(columns = CAN_COLUMNS)
     base_timestamp = get_base_timestamp(dataset = dataset)
 
     for i in tqdm(range(0, 4000), leave = True):
@@ -115,7 +116,7 @@ def create_can_normal_dataset(input_data: typing.TextIO, target: str) -> None:
             line = line.split()
             temp.append(np.array([line[-2], line[1], line[2], ' '.join(line[3:-2])]))
     data = np.array(temp)
-    dataframe = pandas.DataFrame(columns = COLUMNS, data = data)
+    dataframe = pandas.DataFrame(columns = CAN_COLUMNS, data = data)
     label = np.array([0 for i in range(len(dataframe))])
     dataframe['label'] = label
     dataframe.to_csv(f'{target}.csv', sep = ',', index = False)
@@ -129,6 +130,33 @@ def create_can_fd_normal_dataset(input_data: typing.TextIO, target: str) -> None
     :param input_data: raw data ( CAN-FD )
     :param target: absolute path about dataset
     """
-    # @todo : can_fd raw data 가공 구현
 
-    pass
+    input_data.readline()
+    data = list()
+    temp = None
+    string = None
+    dlc = 0
+
+    for line in tqdm(input_data.readlines(), leave = True):
+        if not line == 'Logging stopped.\n':
+            line = line.split()
+            if len(line) == 14:
+                temp = [line[-2], line[1], line[3], line[2], line[-1]]
+                string = ' '.join(line[4:-2])
+                dlc = (int(line[3], 16) // 8) - 1
+            else:
+                string = f'{string} {" ".join(line)}'
+                dlc -= 1
+
+            if dlc == 0:
+                temp.append(string)
+                data.append(np.array(temp))
+
+    data = np.array(data)
+    dataframe = pandas.DataFrame(columns = FD_COLUMNS, data = data)
+    label = np.array([0 for i in range(len(dataframe))])
+    dataframe['label'] = label
+    dataframe.to_csv(f'{target}.csv', sep = ',', index = False)
+
+    print(f'File creating success.')
+    print(f'File path is {os.getcwd()}/{target}.csv')
