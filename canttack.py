@@ -5,7 +5,9 @@ from argparse import RawDescriptionHelpFormatter
 
 from module.AttackBuilder import AttackBuilder
 from module.parser import dataset_group_parser, inject_group_parser
-from module.utils import create_can_normal_dataset
+from module.utils import create_can_normal_dataset, create_can_fd_normal_dataset
+
+from exception import ExceptionController
 
 
 def dataset(args):
@@ -21,19 +23,26 @@ def dataset(args):
     if is_can:
         create_can_normal_dataset(f, dest)
     elif is_can_fd:
-        create_can_normal_dataset(f, dest)
+        create_can_fd_normal_dataset(f, dest)
 
 
 def inject(args):
-    is_ddos, is_fuzzing = args.ddos, args.fuzzing
+    is_can, is_can_fd = args.can, args.can_fd
+    is_dos, is_fuzzing, is_replay, is_spoofing = args.dos, args.fuzzing, args.replay, args.spoofing
     count, target = args.count, args.target
 
     builder = AttackBuilder(target)
 
-    if is_ddos:
-        builder.set_attack_type('ddos')
-    elif is_fuzzing:
+    if is_dos and is_can:
+        builder.set_attack_type('dos')
+    elif is_fuzzing and is_can:
         builder.set_attack_type('fuzzing')
+    elif is_replay and is_can_fd:
+        builder.set_attack_type('replay')
+    elif is_spoofing and is_can_fd:
+        builder.set_attack_type('spoofing')
+    else:
+        ExceptionController.CallTypeMatchException()
 
     for i in range(0, count):
         builder.inject_attack()
@@ -41,35 +50,31 @@ def inject(args):
     builder.build()
 
 
-# def info(args):
-#     print('asdfadsf')
-#     print('qweqwe')
-
-
 def parser_setting():
     parser = argparse.ArgumentParser(description = textwrap.dedent('''\
         canttack is a tool for creating {CAN|CAN FD} normal dataset and injecting attack into dataset.\n
-        DDoS : The injected attack has a interval of 0.00025 and about 4000 pieces of data are injected.
-        Fuzzing : The injected attack has an interval equal to the average of the timestamps of the entire packet, and is injected for about 1 second.
+        Attack types implemented only in the CAN dataset : [ DoS, Fuzzing ]
+        Attack types implemented only in the CAN-FD dataset : [ Replay, Spoofing ] \n
+        DoS : The injected attack has a interval of 0.00025 and about 4000 pieces of data are injected.
+        Fuzzing : The injected attack has an interval equal to the average of the timestamps of the entire packet, and is injected for about 1 second. 
+        Replay : ... 
+        Spoofing : ... 
         '''), prog = 'canttack', formatter_class = RawDescriptionHelpFormatter)
-    parser.add_argument('-V', '--version', action = 'version', version = 'canttack 1.1.1',
+
+    parser.add_argument('-V', '--version', action = 'version', version = 'canttack 2.1.1',
                         help = 'show this program version')
     parser.set_defaults(func = None)
 
     subparsers = parser.add_subparsers(metavar = 'command')
     dataset_parser = subparsers.add_parser('dataset',
-                                           help = 'Create an normal dataset')
+                                           help = 'Create a normal dataset')
     dataset_parser.set_defaults(func = dataset)
     inject_parser = subparsers.add_parser('inject',
                                           help = 'Inject an attack into the dataset')
     inject_parser.set_defaults(func = inject)
-    # info_parser = subparsers.add_parser('info',
-    #                                     help = 'View information about dataset')
-    # info_parser.set_defaults(func = info)
 
     dataset_group_parser(dataset_parser)
     inject_group_parser(inject_parser)
-    # info_group_parser(info_parser)
 
     args = parser.parse_args()
     if args.func is not None:

@@ -70,7 +70,7 @@ def make_fuzzing(dataset: pandas.DataFrame) -> pandas.DataFrame:
 #     return dataset
 
 
-def make_ddos(dataset: pandas.DataFrame) -> pandas.DataFrame:
+def make_dos(dataset: pandas.DataFrame) -> pandas.DataFrame:
     attack_data = pandas.DataFrame(columns = COLUMNS)
     base_timestamp = get_base_timestamp(dataset = dataset)
 
@@ -122,3 +122,13 @@ def create_can_normal_dataset(input_data: typing.TextIO, target: str) -> None:
 
     print(f'File creating is success.')
     print(f'File path is {os.getcwd()}/{target}.csv')
+
+
+def create_can_fd_normal_dataset(input_data: typing.TextIO, target: str) -> None:
+    """
+    :param input_data: raw data ( CAN-FD )
+    :param target: absolute path about dataset
+    """
+    # @todo : can_fd raw data 가공 구현
+
+    pass

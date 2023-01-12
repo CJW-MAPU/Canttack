@@ -1,7 +1,7 @@
 import pandas
 import os
 
-from module.utils import make_fuzzing, make_ddos
+from module.utils import make_fuzzing, make_dos
 
 
 class AttackBuilder:
@@ -20,8 +20,16 @@ class AttackBuilder:
     def inject_attack(cls):
         if cls.__attack_type == 'fuzzing':
             cls.__dataset = make_fuzzing(dataset = cls.__dataset)
-        elif cls.__attack_type == 'ddos':
-            cls.__dataset = make_ddos(dataset = cls.__dataset)
+        elif cls.__attack_type == 'dos':
+            cls.__dataset = make_dos(dataset = cls.__dataset)
+        elif cls.__attack_type == 'replay':
+            pass
+            # @todo : Implement replay attack inject
+            # cls.__dataset = make_replay(dataset = cls.__dataset)
+        elif cls.__attack_type == 'spoofing':
+            pass
+            # @todo : Implement spoofing attack inject
+            # cls.__dataset = make_spoofing(dataset = cls.__dataset)
 
     @classmethod
     def build(cls) -> None:

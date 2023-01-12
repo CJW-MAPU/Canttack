@@ -23,15 +23,22 @@ def inject_group_parser(inject_parser):
     attack_spec_group.add_argument('-c', '--count', type = int, default = 10,
                                    help = 'Number of attacks you want to inject into the dataset')
 
+    dataset_type_group = inject_parser.add_argument_group('Dataset Type')
+
+    dataset_mutual_group = dataset_type_group.add_mutually_exclusive_group(required = True)
+    dataset_mutual_group.add_argument('--can', action = 'store_true',
+                                      help = 'Choose this if want inject any attack into CAN dataset')
+    dataset_mutual_group.add_argument('--can-fd', action = 'store_true',
+                                      help = 'Choose this if want inject any attack into CAN-FD dataset')
+
     attack_type_group = inject_parser.add_argument_group('Attack Type')
 
     inject_mutual_group = attack_type_group.add_mutually_exclusive_group(required = True)
-    inject_mutual_group.add_argument('--ddos', action = 'store_true',
-                                     help = 'Choose this if want inject DDoS attack into dataset')
+    inject_mutual_group.add_argument('--dos', action = 'store_true',
+                                     help = 'Choose this if want inject DoS attack into dataset')
     inject_mutual_group.add_argument('--fuzzing', action = 'store_true',
                                      help = 'Choose this if want inject Fuzzing attack into dataset')
-
-
-def info_group_parser(info_parser):
-    info_parser.add_argument('-d', '--dataset', required = True,
-                             help = 'The name of the dataset you want to check information')
+    inject_mutual_group.add_argument('--replay', action = 'store_true',
+                                     help = 'Choose this if want inject Replay attack into dataset')
+    inject_mutual_group.add_argument('--spoofing', action = 'store_true',
+                                     help = 'Choose this if want inject Spoofing attack into dataset')
