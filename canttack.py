@@ -3,11 +3,11 @@ import os
 import textwrap
 from argparse import RawDescriptionHelpFormatter
 
-from module.AttackBuilder import AttackBuilder
+from builder.AttackBuilder import AttackBuilder
 from module.parser import dataset_group_parser, inject_group_parser
 from module.utils import create_can_normal_dataset, create_can_fd_normal_dataset
-
 from exception import ExceptionController
+from common.Type import AttackType, DataType
 
 
 def dataset(args):
@@ -31,18 +31,27 @@ def inject(args):
     is_dos, is_fuzzing, is_replay, is_spoofing = args.dos, args.fuzzing, args.replay, args.spoofing
     count, target = args.count, args.target
 
-    builder = AttackBuilder(target)
+    data_type = None
 
-    if is_dos and is_can:
-        builder.set_attack_type('dos')
-    elif is_fuzzing and is_can:
-        builder.set_attack_type('fuzzing')
-    elif is_replay and is_can_fd:
-        builder.set_attack_type('replay')
-    elif is_spoofing and is_can_fd:
-        builder.set_attack_type('spoofing')
+    if is_can:
+        data_type = DataType.CAN.value
+    elif is_can_fd:
+        data_type = DataType.FD.value
     else:
-        ExceptionController.CallTypeMatchException()
+        ExceptionController.CallNotSupportDataTypeException()
+
+    builder = AttackBuilder(target, data_type = data_type)
+
+    if is_dos:
+        builder.set_attack_type(AttackType.DOS.value)
+    elif is_fuzzing:
+        builder.set_attack_type(AttackType.FUZZING.value)
+    elif is_replay:
+        builder.set_attack_type(AttackType.REPLAY.value)
+    elif is_spoofing:
+        builder.set_attack_type(AttackType.SPOOFING.value)
+    else:
+        ExceptionController.CallNotSupportAttackTypeException()
 
     for i in range(0, count):
         builder.inject_attack()
