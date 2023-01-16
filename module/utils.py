@@ -48,10 +48,19 @@ HEX = ['0', '1', '2', '3', '4', '5', '6', '7', '8', '9', 'A', 'B', 'C', 'D', 'E'
 
 
 def get_base_timestamp(dataset: pandas.DataFrame) -> float:
+    """
+    :param dataset: normal dataset ( .csv )
+    :return: the timestamp at which the attack will be injected
+    """
     return dataset['Timestamp'].tolist()[random.randint(0, len(dataset) - 1)]
 
 
 def get_interval(identifier: str, dataset: pandas.DataFrame) -> float:
+    """
+    :param identifier: ID for which you want to get the average time interval
+    :param dataset: normal dataset ( .csv )
+    :return:
+    """
     total_interval = dataset['Timestamp'].diff().mean()
     data = dataset.loc[dataset['ID'] == identifier]
     if len(data) == 0:
@@ -62,7 +71,7 @@ def get_interval(identifier: str, dataset: pandas.DataFrame) -> float:
 
 def create_can_normal_dataset(input_data: typing.TextIO, target: str) -> None:
     """
-    :param input_data: raw data ( CAN )
+    :param input_data: raw data ( CAN.txt )
     :param target: absolute path about dataset
     """
 
@@ -84,7 +93,7 @@ def create_can_normal_dataset(input_data: typing.TextIO, target: str) -> None:
 
 def create_can_fd_normal_dataset(input_data: typing.TextIO, target: str) -> None:
     """
-    :param input_data: raw data ( CAN-FD )
+    :param input_data: raw data ( CAN-FD.txt )
     :param target: absolute path about dataset
     """
 

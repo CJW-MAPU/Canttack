@@ -38,18 +38,20 @@ python canttack.py dataset [-T | --target] TARGET \
     
 python canttack.py dataset -T normal_data -n dataset --can
 ```
-- TARGET(essential) : Raw data file name (_e.g._, normal_data.txt)
-- NAME(essential) : Export data file name (_e.g._, dataset.csv)
+- TARGET(required) : Raw data file name (_e.g._, normal_data.txt)
+- NAME(required) : Export data file name (_e.g._, dataset.csv)
 
 ### Inject Attack
 
 ```commandline
 python canttack.py inject [-T | --target] TARGET \
-    [-c | --count] COUNT (--ddos | --fuzzing)
+    [-c | --count] COUNT (--can | --can-fd) (--ddos | --fuzzing | --replay | --spoofing)
 
 python canttack.py inject -T dataset -c 10 --ddos
 python canttack.py inject -T dataset -c 10 --fuzzing
+python canntack.py inject -T dataset -c 10 --replay
+python canttack.py inject -T dataset -c 10 --spoofing
 ```
-- TARGET(essential) : Dataset file name (_e.g._, dataset.csv)
+- TARGET(required) : Dataset file name (_e.g._, dataset.csv)
 - COUNT(optional) : Number of attacks to inject
     - default : 10

@@ -64,8 +64,10 @@ def parser_setting():
         canttack is a tool for creating {CAN|CAN FD} normal dataset and injecting attack into dataset.\n
         Attack types implemented only in the CAN dataset : [ DoS, Fuzzing ]
         Attack types implemented only in the CAN-FD dataset : [ Replay, Spoofing ] \n
-        DoS : The injected attack has a interval of 0.00025 and about 4000 pieces of data are injected.
-        Fuzzing : The injected attack has an interval equal to the average of the timestamps of the entire packet, and is injected for about 1 second. 
+        DoS : The injected attack has an interval of 0.00025 seconds and about 4000 pieces of data are injected.
+              Timestamp is incremented as described above when creating an injection packet, DLC is 8, otherwise 0
+        Fuzzing : The injected attack has an interval of 0.0001 seconds and about 1000 pieces of data are injected.
+                  Timestamp is incremented as described above when creating an injection packet, everything else is randomly determined.
         Replay : ... 
         Spoofing : ... 
         '''), prog = 'canttack', formatter_class = RawDescriptionHelpFormatter)
