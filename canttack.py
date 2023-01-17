@@ -29,7 +29,7 @@ def dataset(args):
 def inject(args):
     is_can, is_can_fd = args.can, args.can_fd
     is_dos, is_fuzzing, is_replay, is_spoofing = args.dos, args.fuzzing, args.replay, args.spoofing
-    count, target = args.count, args.target
+    count, target, payload = args.count, args.target, args.payload
 
     data_type = None
 
@@ -54,7 +54,7 @@ def inject(args):
         ExceptionController.CallNotSupportAttackTypeException()
 
     for i in range(0, count):
-        builder.inject_attack()
+        builder.inject_attack(filepath = payload)
 
     builder.build()
 

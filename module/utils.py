@@ -3,6 +3,7 @@ import os
 import pandas
 import numpy as np
 import random
+import json
 
 from tqdm import tqdm
 
@@ -126,3 +127,10 @@ def create_can_fd_normal_dataset(input_data: typing.TextIO, target: str) -> None
 
     print(f'File creating success.')
     print(f'File path is {os.getcwd()}/{target}.csv')
+
+
+def json_parser(filepath: str, data_type: str, attack_type: str) -> dict:
+    with open(filepath, 'r') as file:
+        jsonfile = json.load(file)
+
+    return jsonfile[data_type][attack_type]

@@ -22,17 +22,17 @@ class AttackBuilder:
         cls.__attack_type = attack_type
 
     @classmethod
-    def inject_attack(cls):
+    def inject_attack(cls, filepath: str):
         if cls.__attack_type == AttackType.DOS.value:
-            cls.__dataset = cls.__attack_service.make_dos(dataset = cls.__dataset)
+            cls.__dataset = cls.__attack_service.make_dos(dataset = cls.__dataset, filepath = filepath)
         elif cls.__attack_type == AttackType.FUZZING.value:
             cls.__dataset = cls.__attack_service.make_fuzzing(dataset = cls.__dataset)
         elif cls.__attack_type == AttackType.REPLAY.value:
             # @todo : Implement replay attack inject
-            cls.__dataset = cls.__attack_service.make_replay(dataset = cls.__dataset)
+            cls.__dataset = cls.__attack_service.make_replay(dataset = cls.__dataset, filepath = filepath)
         elif cls.__attack_type == AttackType.SPOOFING.value:
             # @todo : Implement spoofing attack inject
-            cls.__dataset = cls.__attack_service.make_spoofing(dataset = cls.__dataset)
+            cls.__dataset = cls.__attack_service.make_spoofing(dataset = cls.__dataset, filepath = filepath)
 
     @classmethod
     def build(cls) -> None:

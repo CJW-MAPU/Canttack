@@ -3,7 +3,7 @@ from abc import *
 
 class AttackService(metaclass = ABCMeta):
     @abstractmethod
-    def make_dos(self, dataset):
+    def make_dos(self, dataset, filepath):
         pass
 
     @abstractmethod
@@ -11,9 +11,9 @@ class AttackService(metaclass = ABCMeta):
         pass
 
     @abstractmethod
-    def make_replay(self, dataset):
+    def make_replay(self, dataset, filepath):
         pass
 
     @abstractmethod
-    def make_spoofing(self, dataset):
+    def make_spoofing(self, dataset, filepath):
         pass

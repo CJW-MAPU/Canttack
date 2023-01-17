@@ -1,10 +1,12 @@
 import pandas
 
 from tqdm import tqdm
-from service.AttackService import AttackService
-from module.utils import get_base_timestamp
 from random import randint
-import random
+
+from service.AttackService import AttackService
+from module.utils import get_base_timestamp, json_parser
+from common.Type import DataType, AttackType
+from exception import ExceptionController
 
 
 class CanAttackService(AttackService):
@@ -16,17 +18,21 @@ class CanAttackService(AttackService):
         pass
 
     @classmethod
-    def make_dos(cls, dataset: pandas.DataFrame) -> pandas.DataFrame:
+    def make_dos(cls, dataset: pandas.DataFrame, filepath: str) -> pandas.DataFrame:
         attack_data = pandas.DataFrame(columns = cls.__CAN_COLUMNS)
         base_timestamp = get_base_timestamp(dataset = dataset)
+        data = json_parser(filepath = filepath, data_type = DataType.CAN.value, attack_type = AttackType.DOS.value)
 
-        for i in tqdm(range(0, 4000), leave = True):
-            base_timestamp += 0.00025
-            attack_data.loc[i, 'Timestamp'] = base_timestamp
-            attack_data.loc[i, 'ID'] = '00000000'
-            attack_data.loc[i, 'DLC'] = '8'
-            attack_data.loc[i, 'Payload'] = '00 00 00 00 00 00 00 00'
-            attack_data.loc[i, 'label'] = 1
+        try:
+            for i in tqdm(range(0, 4000), leave = True):
+                base_timestamp += 0.00025
+                attack_data.loc[i, 'Timestamp'] = base_timestamp
+                attack_data.loc[i, 'ID'] = data['id']
+                attack_data.loc[i, 'DLC'] = data['dlc']
+                attack_data.loc[i, 'Payload'] = data['payload']
+                attack_data.loc[i, 'label'] = 1
+        except KeyError:
+            raise ExceptionController.CallInvalidJSONFileException()
 
         dataset = pandas.concat([dataset, attack_data])
 
@@ -59,10 +65,10 @@ class CanAttackService(AttackService):
         return dataset
         pass
 
-    def make_replay(self, dataset: pandas.DataFrame) -> pandas.DataFrame:
+    def make_replay(self, dataset: pandas.DataFrame, filepath: str) -> pandas.DataFrame:
         # @todo : [추후] CAN 에 replay 주입 구현
         pass
 
-    def make_spoofing(self, dataset: pandas.DataFrame) -> pandas.DataFrame:
+    def make_spoofing(self, dataset: pandas.DataFrame, filepath: str) -> pandas.DataFrame:
         # @todo : [추후] CAN 에 replay 주입 구현
         pass
