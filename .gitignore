@@ -2,7 +2,8 @@ normal_run_data.txt
 avante_can_driving_data.txt
 g80_bcan.txt
 g80_mcan.txt
-*.csv
+asdf.csv
+dos_run_data.csv
 /dist
 /build
 canttack.spec

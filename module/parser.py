@@ -23,7 +23,7 @@ def inject_group_parser(inject_parser):
     attack_spec_group.add_argument('-c', '--count', type = int, default = 10,
                                    help = 'Number of attacks you want to inject into the dataset')
 
-    attack_spec_group.add_argument('-p', '--payload', type = str, default = 'DefaultPayload.json',
+    attack_spec_group.add_argument('-p', '--packet', type = str, default = 'DefaultPacket.json',
                                    help = '')
 
     dataset_type_group = inject_parser.add_argument_group('Dataset Type')
