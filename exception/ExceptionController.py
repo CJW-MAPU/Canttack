@@ -1,12 +1,12 @@
-from exception.TypeMatchException import TypeMatchException
+from exception.NotSupportServiceException import NotSupportServiceException
 from exception.NotSupportAttackTypeException import NotSupportAttackTypeException
 from exception.NotSupportDataTypeException import NotSupportDataTypeException
 from exception.InvalidJSONFileException import InvalidJSONFileException
 
 
-def CallTypeMatchException():
-    raise TypeMatchException('Do not match between dataset type and attack type.\n'
-                             'If need you help, please read help.')
+def CallNotSupportServiceException(data_type: str, attack_type: str):
+    raise NotSupportServiceException(f'The entered service [ {data_type} : {attack_type} ] is an unsupported service.'
+                                     f'\n If need you help, please read help.')
 
 
 def CallNotSupportAttackTypeException():

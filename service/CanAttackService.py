@@ -65,10 +65,14 @@ class CanAttackService(AttackService):
         return dataset
         pass
 
-    def make_replay(self, dataset: pandas.DataFrame, filepath: str) -> pandas.DataFrame:
+    def make_replay(self, dataset: pandas.DataFrame, filepath: str):  # -> pandas.DataFrame:
         # @todo : [추후] CAN 에 replay 주입 구현
+        raise ExceptionController.CallNotSupportServiceException(data_type = DataType.CAN.value,
+                                                                 attack_type = AttackType.REPLAY.value)
         pass
 
-    def make_spoofing(self, dataset: pandas.DataFrame, filepath: str) -> pandas.DataFrame:
+    def make_spoofing(self, dataset: pandas.DataFrame, filepath: str):  # -> pandas.DataFrame:
         # @todo : [추후] CAN 에 replay 주입 구현
+        raise ExceptionController.CallNotSupportServiceException(data_type = DataType.CAN.value,
+                                                                 attack_type = AttackType.SPOOFING.value)
         pass

@@ -63,13 +63,11 @@ def parser_setting():
     parser = argparse.ArgumentParser(description = textwrap.dedent('''\
         canttack is a tool for creating {CAN|CAN FD} normal dataset and injecting attack into dataset.\n
         Attack types implemented only in the CAN dataset : [ DoS, Fuzzing ]
-        Attack types implemented only in the CAN-FD dataset : [ Replay, Spoofing ] \n
-        DoS : The injected attack has an interval of 0.00025 seconds and about 4000 pieces of data are injected.
-              Timestamp is incremented as described above when creating an injection packet, DLC is 8, otherwise 0
-        Fuzzing : The injected attack has an interval of 0.0001 seconds and about 1000 pieces of data are injected.
-                  Timestamp is incremented as described above when creating an injection packet, everything else is randomly determined.
+        Attack types implemented only in the CAN-FD dataset : [ DoS, Spoofing ] \n
+        DoS : The injected attack has an interval of 0.00025 seconds and about 4,000 pieces of data are injected.
+        Fuzzing : The injected attack has an interval of 0.0001 seconds and about 1,000 pieces of data are injected.
         Replay : ... 
-        Spoofing : ... 
+        Spoofing : The injected attack has an interval of 0.0001 seconds and about 1,000 pieces of data are injected.
         '''), prog = 'canttack', formatter_class = RawDescriptionHelpFormatter)
 
     parser.add_argument('-V', '--version', action = 'version', version = 'canttack 2.1.1',
