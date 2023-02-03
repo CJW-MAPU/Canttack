@@ -73,7 +73,7 @@ python canttack.py inject [-T | --target] TARGET \
 ```
 - TARGET(required) : Dataset file name (_e.g._, dataset_filename)
 - COUNT(optional) : Number of attacks to inject
-    - default : 10
+    - default : 10 (If attack type is replay, default is 1.)
 - Packet(optional) : The attack packet you want to inject
     - default : DefaultPacket.json
 
@@ -115,7 +115,7 @@ python canttack.py inject -T can_data -p CustomPacket --can --spoofing
       "payload": CAN_PAYLOAD(string, delimeter = whitespace)
     },
     "replay": {
-      "url": CAN_PACKET_CHUNKS_FILE_PATH(string, format = *.csv)
+      "path": CAN_PACKET_CHUNKS_FILE_PATH(string, format = *.csv)
     },
     "spoofing": {
       "id": "...",
@@ -133,7 +133,7 @@ python canttack.py inject -T can_data -p CustomPacket --can --spoofing
        "payload": CAN_FD_PAYLOAD(string, delimeter = whitespace)
     },
     "replay": {
-      "url": CAN_FD_PACKET_CHUNKS_FILE_PATH(string, format = *.csv)
+      "path": CAN_FD_PACKET_CHUNKS_FILE_PATH(string, format = *.csv)
     },
     "spoofing": {
       "id": "...",

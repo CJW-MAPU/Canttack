@@ -18,7 +18,6 @@ class FDAttackService(AttackService):
 
     @classmethod
     def make_dos(cls, dataset: pandas.DataFrame, filepath: str) -> pandas.DataFrame:
-        # @todo : [추후] FD 에 dos 주입 구현
         attack_data = pandas.DataFrame(columns = cls.__FD_COLUMNS)
         base_timestamp = get_base_timestamp(dataset = dataset)
         data = json_parser(filepath = filepath, data_type = DataType.FD.value, attack_type = AttackType.DOS.value)
@@ -50,11 +49,20 @@ class FDAttackService(AttackService):
         pass
 
     @classmethod
-    def make_replay(cls, dataset: pandas.DataFrame, filepath: str):  # -> pandas.DataFrame:
-        # @todo : [1순위] FD 에 replay 주입 구현
-        raise ExceptionController.CallNotSupportServiceException(data_type = DataType.FD.value,
-                                                                 attack_type = AttackType.REPLAY.value)
-        pass
+    def make_replay(cls, dataset: pandas.DataFrame, filepath: str) -> pandas.DataFrame:
+        data = json_parser(filepath = filepath, data_type = DataType.FD.value, attack_type = AttackType.REPLAY.value)
+        try:
+            attack_data = pandas.read_csv(f'{data["path"]}')
+        except KeyError:
+            raise ExceptionController.CallInvalidJSONFileException()
+
+        attack_data['label'] = [1 for _ in range(len(attack_data))]
+
+        dataset = pandas.concat([dataset, attack_data])
+
+        dataset = dataset.sort_values(by = 'Timestamp')
+
+        return dataset
 
     @classmethod
     def make_spoofing(cls, dataset: pandas.DataFrame, filepath: str) -> pandas.DataFrame:

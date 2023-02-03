@@ -28,10 +28,8 @@ class AttackBuilder:
         elif cls.__attack_type == AttackType.FUZZING.value:
             cls.__dataset = cls.__attack_service.make_fuzzing(dataset = cls.__dataset)
         elif cls.__attack_type == AttackType.REPLAY.value:
-            # @todo : Implement replay attack inject
             cls.__dataset = cls.__attack_service.make_replay(dataset = cls.__dataset, filepath = filepath)
         elif cls.__attack_type == AttackType.SPOOFING.value:
-            # @todo : Implement spoofing attack inject
             cls.__dataset = cls.__attack_service.make_spoofing(dataset = cls.__dataset, filepath = filepath)
 
     @classmethod

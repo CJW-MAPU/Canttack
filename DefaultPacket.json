@@ -5,11 +5,8 @@
       "dlc": "8",
       "payload": "00 00 00 00 00 00 00 00"
     },
-    "fuzzing": {
-
-    },
     "replay": {
-      "url": ""
+      "path": ""
     },
     "spoofing": {
       "id": "",
@@ -25,11 +22,8 @@
        "dir": "R",
        "payload": "00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00"
     },
-    "fuzzing": {
-
-    },
     "replay": {
-      "url": ""
+      "path": "can-fd_replay_dummy.csv"
     },
     "spoofing": {
       "id": "00000100",

@@ -29,7 +29,7 @@ def dataset(args):
 def inject(args):
     is_can, is_can_fd = args.can, args.can_fd
     is_dos, is_fuzzing, is_replay, is_spoofing = args.dos, args.fuzzing, args.replay, args.spoofing
-    count, target, payload = args.count, args.target, args.payload
+    count, target, packet = args.count, args.target, args.packet
 
     data_type = None
 
@@ -48,13 +48,14 @@ def inject(args):
         builder.set_attack_type(AttackType.FUZZING.value)
     elif is_replay:
         builder.set_attack_type(AttackType.REPLAY.value)
+        count = 1
     elif is_spoofing:
         builder.set_attack_type(AttackType.SPOOFING.value)
     else:
         ExceptionController.CallNotSupportAttackTypeException()
 
     for i in range(0, count):
-        builder.inject_attack(filepath = payload)
+        builder.inject_attack(filepath = packet)
 
     builder.build()
 
