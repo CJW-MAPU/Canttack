@@ -27,9 +27,9 @@ def dataset(args):
 
 
 def inject(args):
-    is_can, is_can_fd = args.can, args.can_fd
+    is_can, is_can_fd, is_ae = args.can, args.can_fd, args.ae
     is_dos, is_fuzzing, is_replay, is_spoofing = args.dos, args.fuzzing, args.replay, args.spoofing
-    count, target, packet = args.count, args.target, args.packet
+    count, target, packet, name = args.count, args.target, args.packet, args.name
 
     data_type = None
 
@@ -37,10 +37,12 @@ def inject(args):
         data_type = DataType.CAN.value
     elif is_can_fd:
         data_type = DataType.FD.value
+    elif is_ae:
+        data_type = DataType.AE.value
     else:
         ExceptionController.CallNotSupportDataTypeException()
 
-    builder = AttackBuilder(target, data_type = data_type)
+    builder = AttackBuilder(target, name, data_type = data_type)
 
     if is_dos:
         builder.set_attack_type(AttackType.DOS.value)

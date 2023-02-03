@@ -11,3 +11,4 @@ class AttackType(Enum):
 class DataType(Enum):
     CAN = 'can'
     FD = 'can-fd'
+    AE = 'automotive-ethernet'

@@ -8,14 +8,16 @@ from service.AttackService import AttackService
 
 class AttackBuilder:
     __attack_type: str = None
+    __name: str = None
     __dataset: pandas.DataFrame = None
     __attack_service_factory: AttackServiceFactory = AttackServiceFactory()
     __attack_service: AttackService = None
 
     @classmethod
-    def __init__(cls, dataset_name: str, data_type: str):
+    def __init__(cls, dataset_name: str, name: str, data_type: str):
         cls.__dataset = pandas.read_csv(f'{dataset_name}.csv')
         cls.__attack_service = cls.__attack_service_factory.create_service(data_type = data_type)
+        cls.__name = name
 
     @classmethod
     def set_attack_type(cls, attack_type: str):
@@ -34,7 +36,7 @@ class AttackBuilder:
 
     @classmethod
     def build(cls) -> None:
-        cls.__dataset.to_csv(f'{cls.__attack_type}_run_data.csv', sep = ',', index = False)
+        cls.__dataset.to_csv(f'{cls.__name}.csv', sep = ',', index = False)
         print()
         print(f'File creating is success.')
-        print(f'File path is {os.getcwd()}/{cls.__attack_type}_run_data.csv')
+        print(f'File path is {os.getcwd()}/{cls.__name}.csv')

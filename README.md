@@ -67,11 +67,12 @@ python canttack.py dataset -T fd_normal_data -n fd_data --can-fd
 ### Inject Attack
 
 ```commandline
-python canttack.py inject [-T | --target] TARGET \
+python canttack.py inject [-T | --target] TARGET [-n | --name] NAME \
         [-c | --count] COUNT [-p | --packet] PACKET \
         (--can | --can-fd) (--dos | --fuzzing | --replay | --spoofing)
 ```
 - TARGET(required) : Dataset file name (_e.g._, dataset_filename)
+- NAME(required) : Attack injected dataset file name (_e.g._, attack_dataset_filename)
 - COUNT(optional) : Number of attacks to inject
     - default : 10 (If attack type is replay, default is 1.)
 - Packet(optional) : The attack packet you want to inject
@@ -80,25 +81,25 @@ python canttack.py inject [-T | --target] TARGET \
 <br/>
 
 ### Inject Attack Example
-* If you want inject a DoS attack defined by default into a CAN dataset called can_data.csv.
+* If you want inject a DoS attack defined by default into a CAN dataset called can_data.csv to output.csv.
 ```commandline
-python canttack.py inject -T can_data --can --dos
+python canttack.py inject -T can_data -n output --can --dos
 ```
-* If you want inject a DoS attack defined in CustomPacket.json directly into the CAN dataset called can_data.csv
+* If you want inject a DoS attack defined in CustomPacket.json directly into the CAN dataset called can_data.csv to output.csv
 ```commandline
-python canttack.py inject -T can_data -p CustomPacket --can --dos 
+python canttack.py inject -T can_data -n output -p CustomPacket --can --dos 
 ```
-* If you want to inject 20 DoS attacks defined in CustomPacket.json directly into the CAN dataset called can_data.csv
+* If you want to inject 20 DoS attacks defined in CustomPacket.json directly into the CAN dataset called can_data.csv to output.csv
 ```commandline
-python canttack.py inject -T can_data -c 20 -p CustomPacket --can --dos
+python canttack.py inject -T can_data -n output -c 20 -p CustomPacket --can --dos
 ```
 * etc.
 ```commandline
-python canttack.py inject -T fd_data -c 14 -p CustomPacket --can-fd --replay
+python canttack.py inject -T fd_data -n output -c 14 -p CustomPacket --can-fd --replay
 
-python canttack.py inject -T can_data --can --fuzzing
+python canttack.py inject -T can_data -n output --can --fuzzing
 
-python canttack.py inject -T can_data -p CustomPacket --can --spoofing
+python canttack.py inject -T can_data -n output -p CustomPacket --can --spoofing
 ```
 
 <br/>
