@@ -50,7 +50,6 @@ def inject(args):
         builder.set_attack_type(AttackType.FUZZING.value)
     elif is_replay:
         builder.set_attack_type(AttackType.REPLAY.value)
-        count = 1
     elif is_spoofing:
         builder.set_attack_type(AttackType.SPOOFING.value)
     else:
