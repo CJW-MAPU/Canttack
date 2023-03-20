@@ -42,8 +42,7 @@ class FDAttackService(AttackService):
         return dataset
 
     @classmethod
-    def make_fuzzing(cls, dataset: pandas.DataFrame):  # -> pandas.DataFrame:
-        # @todo : [추후] FD 에 fuzzing 주입 구현
+    def make_fuzzing(cls, dataset: pandas.DataFrame):
         raise ExceptionController.CallNotSupportServiceException(data_type = DataType.FD.value,
                                                                  attack_type = AttackType.FUZZING.value)
         pass
@@ -51,11 +50,19 @@ class FDAttackService(AttackService):
     @classmethod
     def make_replay(cls, dataset: pandas.DataFrame, filepath: str) -> pandas.DataFrame:
         data = json_parser(filepath = filepath, data_type = DataType.FD.value, attack_type = AttackType.REPLAY.value)
+        base_timestamp = get_base_timestamp(dataset = dataset)
+        print(base_timestamp)
         try:
             attack_data = pandas.read_csv(f'{data["path"]}')
         except KeyError:
             raise ExceptionController.CallInvalidJSONFileException()
 
+        timestamp_diff = attack_data['Timestamp'].diff().fillna(0).tolist()
+
+        for i in range(1, len(timestamp_diff)):
+            timestamp_diff[i] += timestamp_diff[i - 1]
+
+        attack_data['Timestamp'] = pandas.DataFrame(columns = ['Timestamp'], data = timestamp_diff) + base_timestamp
         attack_data['label'] = [1 for _ in range(len(attack_data))]
 
         dataset = pandas.concat([dataset, attack_data])
