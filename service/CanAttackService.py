@@ -63,7 +63,6 @@ class CanAttackService(AttackService):
         dataset = dataset.sort_values(by = 'Timestamp')
 
         return dataset
-        pass
 
     def make_replay(self, dataset: pandas.DataFrame, filepath: str):  # -> pandas.DataFrame:
         # @todo : [추후] CAN 에 replay 주입 구현
