@@ -45,18 +45,18 @@ class CanAttackService(AttackService):
         attack_data = pandas.DataFrame(columns = cls.__CAN_COLUMNS)
         base_timestamp = get_base_timestamp(dataset = dataset)
 
-        for i in tqdm(range(0, 1000), leave = True):
+        for i in tqdm(range(0, 4000), leave = True):
             id_data = cls.__HEX[randint(0, 15)] + cls.__HEX[randint(0, 15)] + cls.__HEX[randint(0, 15)]
             dlc = randint(3, 8)
             can_id = '00000{0}'.format(id_data)
             payload = [cls.__HEX[randint(0, 15)] + cls.__HEX[randint(0, 15)] for _ in range(0, dlc)]
 
-            base_timestamp += 0.0001
+            base_timestamp += 0.00025
             attack_data.loc[i, 'Timestamp'] = base_timestamp
             attack_data.loc[i, 'ID'] = can_id
             attack_data.loc[i, 'DLC'] = str(dlc)
             attack_data.loc[i, 'Payload'] = ' '.join(payload)
-            attack_data.loc[i, 'label'] = 1
+            attack_data.loc[i, 'label'] = 2
 
         dataset = pandas.concat([dataset, attack_data])
 
@@ -64,14 +64,52 @@ class CanAttackService(AttackService):
 
         return dataset
 
-    def make_replay(self, dataset: pandas.DataFrame, filepath: str):  # -> pandas.DataFrame:
-        # @todo : [추후] CAN 에 replay 주입 구현
-        raise ExceptionController.CallNotSupportServiceException(data_type = DataType.CAN.value,
-                                                                 attack_type = AttackType.REPLAY.value)
-        pass
+    @classmethod
+    def make_replay(cls, dataset: pandas.DataFrame, filepath: str) -> pandas.DataFrame:
+        # @todo: [후순위] 창업 과제용 replay 주입, 추후 바꿔야 함!
+        attack_data = pandas.DataFrame(columns = cls.__CAN_COLUMNS)
+        data = json_parser(filepath = filepath, data_type = DataType.CAN.value, attack_type = AttackType.REPLAY.value)
+        base_timestamp = get_base_timestamp(dataset = dataset)
 
-    def make_spoofing(self, dataset: pandas.DataFrame, filepath: str):  # -> pandas.DataFrame:
-        # @todo : [추후] CAN 에 replay 주입 구현
-        raise ExceptionController.CallNotSupportServiceException(data_type = DataType.CAN.value,
-                                                                 attack_type = AttackType.SPOOFING.value)
-        pass
+        try:
+            base_data = pandas.read_csv(f'{data["path"]}')
+        except KeyError:
+            raise ExceptionController.CallInvalidJSONFileException()
+        base_data = base_data.sample(1)
+
+        for i in tqdm(range(0, 4000), leave = True):
+            base_timestamp += 0.00025
+            attack_data.loc[i, 'Timestamp'] = base_timestamp
+            attack_data.loc[i, 'ID'] = base_data['ID'].values[0]
+            attack_data.loc[i, 'DLC'] = base_data['DLC'].values[0]
+            attack_data.loc[i, 'Payload'] = base_data['Payload'].values[0]
+            attack_data.loc[i, 'label'] = 3
+
+        dataset = pandas.concat([dataset, attack_data])
+
+        dataset = dataset.sort_values(by = 'Timestamp')
+
+        return dataset
+
+    @classmethod
+    def make_spoofing(cls, dataset: pandas.DataFrame, filepath: str) -> pandas.DataFrame:
+        attack_data = pandas.DataFrame(columns = cls.__CAN_COLUMNS)
+        base_timestamp = get_base_timestamp(dataset = dataset)
+        data = json_parser(filepath = filepath, data_type = DataType.CAN.value, attack_type = AttackType.SPOOFING.value)
+
+        try:
+            for i in tqdm(range(0, 4000), leave = True):
+                base_timestamp += 0.00025
+                attack_data.loc[i, 'Timestamp'] = base_timestamp
+                attack_data.loc[i, 'ID'] = data['id']
+                attack_data.loc[i, 'DLC'] = data['dlc']
+                attack_data.loc[i, 'Payload'] = data['payload']
+                attack_data.loc[i, 'label'] = 4
+        except KeyError:
+            raise ExceptionController.CallInvalidJSONFileException()
+
+        dataset = pandas.concat([dataset, attack_data])
+
+        dataset = dataset.sort_values(by = 'Timestamp')
+
+        return dataset

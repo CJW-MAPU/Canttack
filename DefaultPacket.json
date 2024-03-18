@@ -6,12 +6,12 @@
       "payload": "00 00 00 00 00 00 00 00"
     },
     "replay": {
-      "path": ""
+      "path": "can_replay_dummy.csv"
     },
     "spoofing": {
-      "id": "",
-      "dlc": "",
-      "payload": ""
+      "id": "000007FE",
+      "dlc": "8",
+      "payload": "B3 AF CF 13 92 5D 00 00"
     }
   },
   "can-fd": {
@@ -26,11 +26,11 @@
       "path": "can-fd_replay_dummy.csv"
     },
     "spoofing": {
-      "id": "00000100",
+      "id": "000007FE",
       "dlc": "20",
       "flg": "FB",
       "dir": "R",
-      "payload": "46 99 E3 00 10 CB 80 6C 40 00 25 00 00 00 00 57 0A 00 00 00 D0 01 00 00 FE FF 2F B6 73 00 00 00"
+      "payload": "3B 43 21 00 00 81 FE 2A 00 00 B3 AF CF 13 92 5D 00 00 00 00 D0 01 00 00 1D 41 28 00 00 00 00 AE"
     }
   }
 }

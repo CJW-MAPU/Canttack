@@ -74,7 +74,7 @@ class FDAttackService(AttackService):
     def make_replay(cls, dataset: pandas.DataFrame, filepath: str) -> pandas.DataFrame:
         data = json_parser(filepath = filepath, data_type = DataType.FD.value, attack_type = AttackType.REPLAY.value)
         base_timestamp = get_base_timestamp(dataset = dataset)
-        print(base_timestamp)
+
         try:
             attack_data = pandas.read_csv(f'{data["path"]}')
         except KeyError:
@@ -96,7 +96,6 @@ class FDAttackService(AttackService):
 
     @classmethod
     def make_spoofing(cls, dataset: pandas.DataFrame, filepath: str) -> pandas.DataFrame:
-        # @todo : [1순위] FD 에 spoofing 주입 구현
         attack_data = pandas.DataFrame(columns = cls.__FD_COLUMNS)
         base_timestamp = get_base_timestamp(dataset = dataset)
         data = json_parser(filepath = filepath, data_type = DataType.FD.value, attack_type = AttackType.SPOOFING.value)
