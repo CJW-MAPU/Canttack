@@ -45,7 +45,7 @@ class FDAttackService(AttackService):
         return dataset
 
     @classmethod
-    def make_fuzzing(cls, dataset: pandas.DataFrame):
+    def make_fuzzing(cls, dataset: pandas.DataFrame) -> pandas.DataFrame:
         attack_data = pandas.DataFrame(columns = cls.__FD_COLUMNS)
         base_timestamp = get_base_timestamp(dataset = dataset)
 

@@ -13,25 +13,25 @@ class AEAttackService(AttackService):
         pass
 
     @classmethod
-    def make_dos(cls, dataset, filepath):
-        raise ExceptionController.CallNotSupportServiceException(data_type = DataType.AE.value,
-                                                                 attack_type = AttackType.DOS.value)
+    def make_dos(cls, dataset: pandas.DataFrame, filepath: str) -> None:
+        raise ExceptionController.CallNotSupportAttackServiceException(data_type = DataType.AE.value,
+                                                                       attack_type = AttackType.DOS.value)
         pass
 
     @classmethod
-    def make_fuzzing(cls, dataset):
-        raise ExceptionController.CallNotSupportServiceException(data_type = DataType.AE.value,
-                                                                 attack_type = AttackType.FUZZING.value)
+    def make_fuzzing(cls, dataset: pandas.DataFrame) -> None:
+        raise ExceptionController.CallNotSupportAttackServiceException(data_type = DataType.AE.value,
+                                                                       attack_type = AttackType.FUZZING.value)
         pass
 
     @classmethod
-    def make_replay(cls, dataset, filepath):
-        raise ExceptionController.CallNotSupportServiceException(data_type = DataType.AE.value,
-                                                                 attack_type = AttackType.REPLAY.value)
+    def make_replay(cls, dataset: pandas.DataFrame, filepath: str) -> None:
+        raise ExceptionController.CallNotSupportAttackServiceException(data_type = DataType.AE.value,
+                                                                       attack_type = AttackType.REPLAY.value)
         pass
 
     @classmethod
-    def make_spoofing(cls, dataset, filepath):
-        raise ExceptionController.CallNotSupportServiceException(data_type = DataType.AE.value,
-                                                                 attack_type = AttackType.SPOOFING.value)
+    def make_spoofing(cls, dataset: pandas.DataFrame, filepath: str) -> None:
+        raise ExceptionController.CallNotSupportAttackServiceException(data_type = DataType.AE.value,
+                                                                       attack_type = AttackType.SPOOFING.value)
         pass

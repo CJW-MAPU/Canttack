@@ -4,6 +4,7 @@ import os
 from common.Type import AttackType, DataType
 from factory.AttackServiceFactory import AttackServiceFactory
 from service.AttackService import AttackService
+from exception import ExceptionController
 
 
 class AttackBuilder:
@@ -33,10 +34,12 @@ class AttackBuilder:
             cls.__dataset = cls.__attack_service.make_replay(dataset = cls.__dataset, filepath = filepath)
         elif cls.__attack_type == AttackType.SPOOFING.value:
             cls.__dataset = cls.__attack_service.make_spoofing(dataset = cls.__dataset, filepath = filepath)
+        else:
+            raise ExceptionController.CallNotSupportAttackTypeException()
 
     @classmethod
     def build(cls) -> None:
-        cls.__dataset.to_csv(f'{cls.__name}.csv', sep = ',', index = False)
+        cls.__dataset.to_csv(f'data/{cls.__name}.csv', sep = ',', index = False)
         print()
         print(f'File creating is success.')
-        print(f'File path is {os.getcwd()}/{cls.__name}.csv')
+        print(f'File path is {os.getcwd()}/data/{cls.__name}.csv')

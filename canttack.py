@@ -4,26 +4,44 @@ import textwrap
 from argparse import RawDescriptionHelpFormatter
 
 from builder.AttackBuilder import AttackBuilder
+from builder.DatasetBuilder import DatasetBuilder
 from module.parser import dataset_group_parser, inject_group_parser
-from module.utils import create_can_normal_dataset, create_can_fd_normal_dataset
 from exception import ExceptionController
-from common.Type import AttackType, DataType
+from common.Type import AttackType, DataType, VehicleType
 
 
 def dataset(args):
-    is_can, is_can_fd = args.can, args.can_fd
+    is_can, is_can_fd, is_ae = args.can, args.can_fd, args.ae
+    is_carnival, is_avante = args.carnival, args.avante
     dest, target = args.name, args.target
     f = None
 
     try:
-        f = open(f'{target}.txt')
+        f = open(f'raw-data/{target}.txt')
     except FileNotFoundError:
         exit(f'{target}.txt file is Not Found! please check file in current directory {os.getcwd()}')
 
+    vehicle_type = None
+
+    if is_avante:
+        vehicle_type = VehicleType.AVANTE.value
+    elif is_carnival:
+        vehicle_type = VehicleType.CARNIVAL.value
+    else:
+        ExceptionController.CallNotSupportVehicleTypeException()
+
+    builder = DatasetBuilder(file = f, dest = dest, vehicle_type = vehicle_type)
+
     if is_can:
-        create_can_normal_dataset(f, dest)
+        builder.set_data_type(DataType.CAN.value)
     elif is_can_fd:
-        create_can_fd_normal_dataset(f, dest)
+        builder.set_data_type(DataType.FD.value)
+    else:
+        ExceptionController.CallNotSupportDataTypeException()
+
+    builder.create_dataset()
+
+    builder.build()
 
 
 def inject(args):
@@ -64,11 +82,12 @@ def inject(args):
 def parser_setting():
     parser = argparse.ArgumentParser(description = textwrap.dedent('''\
         canttack is a tool for creating {CAN|CAN FD} normal dataset and injecting attack into dataset.\n
-        Attack types implemented only in the CAN dataset : [ DoS, Fuzzing ]
-        Attack types implemented only in the CAN-FD dataset : [ DoS, Spoofing ] \n
+        Attack types implemented only in the CAN dataset : [ DoS, Fuzzing, Replay, Spoofing ] 
+        Attack types implemented only in the CAN-FD dataset : [ DoS, Fuzzing, Replay, Spoofing ] \n
+        Supported Vehicle types : [ Avante CN7, Carnival ] \n
         DoS : The injected attack has an interval of 0.00025 seconds and about 4,000 pieces of data are injected.
         Fuzzing : The injected attack has an interval of 0.0001 seconds and about 1,000 pieces of data are injected.
-        Replay : ... 
+        Replay : The injected attack has an interval of 0.00025 seconds and about 4,000 pieces of data are injected.
         Spoofing : The injected attack has an interval of 0.0001 seconds and about 1,000 pieces of data are injected.
         '''), prog = 'canttack', formatter_class = RawDescriptionHelpFormatter)
 
@@ -96,9 +115,6 @@ def parser_setting():
 
 def main():
     parser_setting()
-    # @todo 1: Add CAN FD Option
-    # @todo 2: Code Refactoring
-    # @todo 3: Update description in help command
 
 
 if __name__ == '__main__':

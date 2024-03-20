@@ -12,3 +12,8 @@ class DataType(Enum):
     CAN = 'can'
     FD = 'can-fd'
     AE = 'automotive-ethernet'
+
+
+class VehicleType(Enum):
+    AVANTE = 'avante'
+    CARNIVAL = 'carnival'

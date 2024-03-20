@@ -44,8 +44,7 @@ python canttack.py [-V | --version]
 
 ```commandline
 python canttack.py dataset [-T | --target] TARGET \
-    [-n | --name] NAME (--can | --can-fd)
-    
+    [-n | --name] NAME (--can | --can-fd) (--avante | --carnival)
 ```
 - TARGET(required) : Raw data file name (_e.g._, normal_data_filename)
 - NAME(required) : Export data file name (_e.g._, dataset_filename)
@@ -53,13 +52,13 @@ python canttack.py dataset [-T | --target] TARGET \
 <br/>
 
 ### Create Normal Dataset Example
-Suppose you own a file called can_normal_data.txt and you want to convert it to can_data.csv.
+Suppose you own a file called avante_can_normal_data.txt and you want to convert it to avante_can_data.csv.
 ```commandline
-python canttack.py dataset -T can_normal_data -n can_data --can
+python canttack.py dataset -T avante_can_normal_data -n avante_can_data --can --avante
 ```
-Suppose you own a file called fd_normal_data.txt and you want to convert it to fd_data.csv.
+Suppose you own a file called carnival_fd_normal_data.txt and you want to convert it to carnival_fd_data.csv.
 ```commandline
-python canttack.py dataset -T fd_normal_data -n fd_data --can-fd
+python canttack.py dataset -T carnival_fd_normal_data -n carnival_fd_data --can-fd --carnival
 ```
 
 <br/>

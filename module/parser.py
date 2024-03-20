@@ -1,20 +1,29 @@
 def dataset_group_parser(dataset_parser):
     dataset_group = dataset_parser.add_argument_group('Target Dataset Specification')
     dataset_group2 = dataset_parser.add_argument_group('Destination Dataset Specification')
+    dataset_group3 = dataset_parser.add_argument_group('Target Vehicle Specification')
 
     dataset_group.add_argument('-T', '--target', required = True, type = str,
                                help = 'Text file name extracted from {CAN | CAN FD}')
     dataset_group2.add_argument('-n', '--name', required = True, type = str,
                                 help = 'Dataset created by processing target file')
 
-    dataset_mutual_group = dataset_group.add_mutually_exclusive_group(required = True)
+    protocol_type_mutual_group = dataset_group.add_mutually_exclusive_group(required = True)
 
-    dataset_mutual_group.add_argument('--can', action = 'store_true',
-                                      help = 'Choose this if target is CAN text file')
-    dataset_mutual_group.add_argument('--can-fd', action = 'store_true',
-                                      help = 'Choose this if target is CAN FD text file')
-    dataset_mutual_group.add_argument('--ae', action = 'store_true',
-                                      help = 'Choose this if target is Automotive Ethernet data file')
+    protocol_type_mutual_group.add_argument('--can', action = 'store_true',
+                                            help = 'Choose this if target is CAN text file')
+    protocol_type_mutual_group.add_argument('--can-fd', action = 'store_true',
+                                            help = 'Choose this if target is CAN FD text file')
+    protocol_type_mutual_group.add_argument('--ae', action = 'store_true',
+                                            help = 'Choose this if target is Automotive Ethernet data file')
+
+    vehicle_type_mutual_group = dataset_group3.add_mutually_exclusive_group(required = True)
+
+    vehicle_type_mutual_group.add_argument('--avante', action = 'store_true',
+                                           help = 'Choose this if target vehicle is Avante')
+
+    vehicle_type_mutual_group.add_argument('--carnival', action = 'store_true',
+                                           help = 'Choose this if target vehicle is Carnival')
 
 
 def inject_group_parser(inject_parser):

@@ -1,5 +1,5 @@
 normal_run_data.txt
-avante_can_driving_data.txt
+raw-data/avante_can_driving_data.txt
 g80_bcan.txt
 g80_mcan.txt
 asdf.csv
@@ -7,8 +7,13 @@ dos_run_data.csv
 /dist
 /build
 canttack.spec
-can-fd_driving.txt
+raw-data/can-fd_driving.txt
 can-fd_parking.txt
 .idea
 can-fd_replay_dummy.csv
-fd_data.csv
+data/can-fd_data.csv
+*.csv
+.ipynb_checkpoints
+*/__pycache__
+data
+raw-data
