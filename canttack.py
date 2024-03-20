@@ -91,7 +91,7 @@ def parser_setting():
         Spoofing : The injected attack has an interval of 0.0001 seconds and about 1,000 pieces of data are injected.
         '''), prog = 'canttack', formatter_class = RawDescriptionHelpFormatter)
 
-    parser.add_argument('-V', '--version', action = 'version', version = 'canttack 2.1.1',
+    parser.add_argument('-V', '--version', action = 'version', version = 'canttack 2.2.1',
                         help = 'show this program version')
     parser.set_defaults(func = None)
 

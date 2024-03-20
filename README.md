@@ -6,7 +6,8 @@
 #### After `git pull` and install requirements
 
 # Update
-### 2.* : Implement inject attack about can-fd data
+### 2.* : Implement inject attack about can-fd data.
+### 2.2.* : Dataset build methodology separation about carnival data and avante data.
 
 <br/>
 <br/>
