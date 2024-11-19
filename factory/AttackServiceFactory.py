@@ -16,7 +16,7 @@ class AttackServiceFactory:
         pass
 
     @classmethod
-    def create_service(cls, data_type: DataType) -> AttackService:
+    def create_service(cls, data_type: str) -> AttackService:
         if data_type == DataType.CAN.value:
             service = cls.__can_service
         elif data_type == DataType.FD.value:

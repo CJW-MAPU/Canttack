@@ -1,7 +1,7 @@
 import pandas
 
 from tqdm import tqdm
-from random import randint
+from random import randint, choice
 
 from common.Type import DataType, AttackType
 from module.utils import get_base_timestamp, get_interval
@@ -11,7 +11,7 @@ from exception import ExceptionController
 
 
 class FDAttackService(AttackService):
-    __FD_COLUMNS = ['Timestamp', 'ID', 'DLC', 'Flg', 'Dir', 'Payload', 'label']
+    __COLUMNS = ['Timestamp', 'ID', 'DLC', 'Payload', 'label']
     __HEX = ['0', '1', '2', '3', '4', '5', '6', '7', '8', '9', 'A', 'B', 'C', 'D', 'E', 'F']
     __DLC = ['8', '10', '18', '20']
 
@@ -21,7 +21,7 @@ class FDAttackService(AttackService):
 
     @classmethod
     def make_dos(cls, dataset: pandas.DataFrame, filepath: str) -> pandas.DataFrame:
-        attack_data = pandas.DataFrame(columns = cls.__FD_COLUMNS)
+        attack_data = pandas.DataFrame(columns = cls.__COLUMNS)
         base_timestamp = get_base_timestamp(dataset = dataset)
         data = json_parser(filepath = filepath, data_type = DataType.FD.value, attack_type = AttackType.DOS.value)
 
@@ -31,8 +31,6 @@ class FDAttackService(AttackService):
                 attack_data.loc[i, 'Timestamp'] = base_timestamp
                 attack_data.loc[i, 'ID'] = data['id']
                 attack_data.loc[i, 'DLC'] = data['dlc']
-                attack_data.loc[i, 'Flg'] = data['flg']
-                attack_data.loc[i, 'Dir'] = data['dir']
                 attack_data.loc[i, 'Payload'] = data['payload']
                 attack_data.loc[i, 'label'] = 1
         except KeyError:
@@ -46,21 +44,36 @@ class FDAttackService(AttackService):
 
     @classmethod
     def make_fuzzing(cls, dataset: pandas.DataFrame) -> pandas.DataFrame:
-        attack_data = pandas.DataFrame(columns = cls.__FD_COLUMNS)
+        attack_data = pandas.DataFrame(columns = cls.__COLUMNS)
         base_timestamp = get_base_timestamp(dataset = dataset)
 
         for i in tqdm(range(0, 1000), leave = True):
-            id_data = cls.__HEX[randint(0, 15)] + cls.__HEX[randint(0, 15)] + cls.__HEX[randint(0, 15)]
+            # -- 원본
+            id_data = choice(list(dataset['ID'].unique()))
             dlc = cls.__DLC[randint(0, 3)]
-            can_id = '00000{0}'.format(id_data)
+            can_id = id_data
             payload = [cls.__HEX[randint(0, 15)] + cls.__HEX[randint(0, 15)] for _ in range(0, int(dlc, 16))]
+
+            # -- 06A 주입
+            # id_data = '06A'
+            # dlc = 'D'
+            # can_id = id_data
+            # payload = [cls.__HEX[randint(0, 15)] + cls.__HEX[randint(0, 15)] for _ in range(7)]
+            # payload += ['0A']
+            # payload += [cls.__HEX[randint(0, 15)] + cls.__HEX[randint(0, 15)] for _ in range(5)]
+
+            # -- 417 주입
+            # id_data = '417'
+            # dlc = '8'
+            # can_id = id_data
+            # payload = [cls.__HEX[randint(0, 15)] + cls.__HEX[randint(0, 15)] for _ in range(5)]
+            # payload += ['11']
+            # payload += [cls.__HEX[randint(0, 15)] + cls.__HEX[randint(0, 15)] for _ in range(2)]
 
             base_timestamp += 0.0001
             attack_data.loc[i, 'Timestamp'] = base_timestamp
             attack_data.loc[i, 'ID'] = can_id
             attack_data.loc[i, 'DLC'] = dlc
-            attack_data.loc[i, 'Flg'] = 'FB'
-            attack_data.loc[i, 'Dir'] = 'R'
             attack_data.loc[i, 'Payload'] = ' '.join(payload)
             attack_data.loc[i, 'label'] = 1
 
@@ -96,18 +109,16 @@ class FDAttackService(AttackService):
 
     @classmethod
     def make_spoofing(cls, dataset: pandas.DataFrame, filepath: str) -> pandas.DataFrame:
-        attack_data = pandas.DataFrame(columns = cls.__FD_COLUMNS)
+        attack_data = pandas.DataFrame(columns = cls.__COLUMNS)
         base_timestamp = get_base_timestamp(dataset = dataset)
         data = json_parser(filepath = filepath, data_type = DataType.FD.value, attack_type = AttackType.SPOOFING.value)
 
         try:
-            for i in tqdm(range(0, 1000), leave = True):
+            for i in tqdm(range(0, 4000), leave = True):
                 base_timestamp += 0.0001
                 attack_data.loc[i, 'Timestamp'] = base_timestamp
                 attack_data.loc[i, 'ID'] = data['id']
                 attack_data.loc[i, 'DLC'] = data['dlc']
-                attack_data.loc[i, 'Flg'] = data['flg']
-                attack_data.loc[i, 'Dir'] = data['dir']
                 attack_data.loc[i, 'Payload'] = data['payload']
                 attack_data.loc[i, 'label'] = 1
         except KeyError:

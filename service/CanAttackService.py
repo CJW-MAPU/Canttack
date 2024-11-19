@@ -47,8 +47,10 @@ class CanAttackService(AttackService):
 
         for i in tqdm(range(0, 4000), leave = True):
             id_data = cls.__HEX[randint(0, 15)] + cls.__HEX[randint(0, 15)] + cls.__HEX[randint(0, 15)]
-            dlc = randint(3, 8)
-            can_id = '00000{0}'.format(id_data)
+            # dlc = randint(3, 8)
+            dlc = 8
+            # can_id = '00000{0}'.format(id_data)
+            can_id = '000004F1'
             payload = [cls.__HEX[randint(0, 15)] + cls.__HEX[randint(0, 15)] for _ in range(0, dlc)]
 
             base_timestamp += 0.00025
@@ -56,7 +58,7 @@ class CanAttackService(AttackService):
             attack_data.loc[i, 'ID'] = can_id
             attack_data.loc[i, 'DLC'] = str(dlc)
             attack_data.loc[i, 'Payload'] = ' '.join(payload)
-            attack_data.loc[i, 'label'] = 2
+            attack_data.loc[i, 'label'] = 1
 
         dataset = pandas.concat([dataset, attack_data])
 
@@ -66,24 +68,21 @@ class CanAttackService(AttackService):
 
     @classmethod
     def make_replay(cls, dataset: pandas.DataFrame, filepath: str) -> pandas.DataFrame:
-        # @todo: [후순위] 창업 과제용 replay 주입, 추후 바꿔야 함!
-        attack_data = pandas.DataFrame(columns = cls.__CAN_COLUMNS)
         data = json_parser(filepath = filepath, data_type = DataType.CAN.value, attack_type = AttackType.REPLAY.value)
         base_timestamp = get_base_timestamp(dataset = dataset)
 
         try:
-            base_data = pandas.read_csv(f'{data["path"]}')
+            attack_data = pandas.read_csv(f'{data["path"]}')
         except KeyError:
             raise ExceptionController.CallInvalidJSONFileException()
-        base_data = base_data.sample(1)
 
-        for i in tqdm(range(0, 4000), leave = True):
-            base_timestamp += 0.00025
-            attack_data.loc[i, 'Timestamp'] = base_timestamp
-            attack_data.loc[i, 'ID'] = base_data['ID'].values[0]
-            attack_data.loc[i, 'DLC'] = base_data['DLC'].values[0]
-            attack_data.loc[i, 'Payload'] = base_data['Payload'].values[0]
-            attack_data.loc[i, 'label'] = 3
+        timestamp_diff = attack_data['Timestamp'].diff().fillna(0).tolist()
+
+        for i in range(1, len(timestamp_diff)):
+            timestamp_diff[i] += timestamp_diff[i - 1]
+
+        attack_data['Timestamp'] = pandas.DataFrame(columns = ['Timestamp'], data = timestamp_diff) + base_timestamp
+        attack_data['label'] = [1 for _ in range(len(attack_data))]
 
         dataset = pandas.concat([dataset, attack_data])
 
@@ -98,13 +97,13 @@ class CanAttackService(AttackService):
         data = json_parser(filepath = filepath, data_type = DataType.CAN.value, attack_type = AttackType.SPOOFING.value)
 
         try:
-            for i in tqdm(range(0, 4000), leave = True):
+            for i in tqdm(range(0, 1000), leave = True):
                 base_timestamp += 0.00025
                 attack_data.loc[i, 'Timestamp'] = base_timestamp
                 attack_data.loc[i, 'ID'] = data['id']
                 attack_data.loc[i, 'DLC'] = data['dlc']
                 attack_data.loc[i, 'Payload'] = data['payload']
-                attack_data.loc[i, 'label'] = 4
+                attack_data.loc[i, 'label'] = 1
         except KeyError:
             raise ExceptionController.CallInvalidJSONFileException()
 

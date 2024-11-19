@@ -16,7 +16,7 @@ class AttackBuilder:
 
     @classmethod
     def __init__(cls, dataset_name: str, name: str, data_type: str):
-        cls.__dataset = pandas.read_csv(f'{dataset_name}.csv')
+        cls.__dataset = pandas.read_csv(f'data/{dataset_name}.csv')
         cls.__attack_service = cls.__attack_service_factory.create_service(data_type = data_type)
         cls.__name = name
 

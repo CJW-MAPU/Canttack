@@ -85,10 +85,10 @@ def parser_setting():
         Attack types implemented only in the CAN dataset : [ DoS, Fuzzing, Replay, Spoofing ] 
         Attack types implemented only in the CAN-FD dataset : [ DoS, Fuzzing, Replay, Spoofing ] \n
         Supported Vehicle types : [ Avante CN7, Carnival ] \n
-        DoS : The injected attack has an interval of 0.00025 seconds and about 4,000 pieces of data are injected.
-        Fuzzing : The injected attack has an interval of 0.0001 seconds and about 1,000 pieces of data are injected.
-        Replay : The injected attack has an interval of 0.00025 seconds and about 4,000 pieces of data are injected.
-        Spoofing : The injected attack has an interval of 0.0001 seconds and about 1,000 pieces of data are injected.
+        DoS : The injected attack has an interval of 0.0025 seconds and about 4,000 pieces of data are injected.
+        Fuzzing : The injected attack has an interval of 0.001 seconds and about 1,000 pieces of data are injected.
+        Replay : The injected attack has an interval of 0.0025 seconds and about 4,000 pieces of data are injected.
+        Spoofing : The injected attack has an interval of 0.001 seconds and about 1,000 pieces of data are injected.
         '''), prog = 'canttack', formatter_class = RawDescriptionHelpFormatter)
 
     parser.add_argument('-V', '--version', action = 'version', version = 'canttack 2.2.1',
