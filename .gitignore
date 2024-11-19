@@ -17,3 +17,4 @@ data/can-fd_data.csv
 */__pycache__
 data
 raw-data
+verify
