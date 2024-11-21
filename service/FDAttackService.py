@@ -47,15 +47,16 @@ class FDAttackService(AttackService):
         attack_data = pandas.DataFrame(columns = cls.__COLUMNS)
         base_timestamp = get_base_timestamp(dataset = dataset)
 
-        for i in tqdm(range(0, 1000), leave = True):
+        for i in tqdm(range(0, 4000), leave = True):
             # -- 원본
-            id_data = choice(list(dataset['ID'].unique()))
+            # id_data = choice(list(dataset['ID'].unique()))
+            id_data = '0000002A'
             dlc = cls.__DLC[randint(0, 3)]
             can_id = id_data
             payload = [cls.__HEX[randint(0, 15)] + cls.__HEX[randint(0, 15)] for _ in range(0, int(dlc, 16))]
 
             # -- 06A 주입
-            # id_data = '06A'
+            # id_data = '02A'
             # dlc = 'D'
             # can_id = id_data
             # payload = [cls.__HEX[randint(0, 15)] + cls.__HEX[randint(0, 15)] for _ in range(7)]
